@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "secrets1": {
+      "type": "secrets.user"
+    },
+    "mongodb1": {
+      "containerPorts": "27017:27017",
+      "secretStore": "LocalSecretsFile",
+      "containerName": "MongoDB",
+      "containerImage": "mongo",
+      "type": "mongodb.container",
+      "connectionId": "mongodb+srv:::dev:dev@petapp1.av7ft.mongodb.net:?retryWrites=true&w=majority&appName=PetApp1"
+    }
+  }
+}
