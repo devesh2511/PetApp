@@ -1,6 +1,4 @@
-﻿
-
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PetApp.Utility.DTOs;
 using PetApp.Utility;
 using PetApp.Services;
@@ -17,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace PetApp.API.Controllers
 {
+    [Tags("Users")]
     [Route("[controller]")]
     [ApiController]
     public class UserController : ControllerBase
