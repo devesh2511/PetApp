@@ -32,15 +32,18 @@ namespace PetApp.API.Controllers
 
         [HttpPost("addPet")]
         public async Task<ActionResult<myPetDB>> Register([FromRoute, BindRequired] string user,
-            [FromHeader, BindRequired] string petName, [FromHeader, BindRequired] DateOnly birthdate,
-            [FromHeader] PetType petType)
+            [FromHeader, BindRequired] string petName, 
+            [FromHeader, BindRequired] int petId, 
+            [FromHeader, BindRequired] PetSex sex,
+            [FromHeader, BindRequired] DateOnly birthdate)
         {
             petRequest request = new()
             {
                 owner = user,
                 petName = petName,
                 birthDate = birthdate,
-                petType = petType,
+                sex = sex,
+                petId = petId,
             };
 
             //var inValid = _myPetValidator.ValidateNew(request);
@@ -71,10 +74,19 @@ namespace PetApp.API.Controllers
         //    return Ok(user);
         //}
         
-        [HttpGet("getAllPets")]
-        public async Task<ActionResult<IEnumerable<myPetDB>>> GetAll([FromRoute, BindRequired] string user)
+        [HttpGet(nameof(GetAllPets))]
+        public async Task<ActionResult<IEnumerable<myPetDB>>> GetAllPets([FromRoute, BindRequired] string user)
         {
             var users = await _myPetService.GetAllUserPets(user);
+            return Ok(users);
+        }
+
+        [HttpGet(nameof(GetOnePet))]
+        public async Task<ActionResult<myPetDB>> GetOnePet([FromRoute, BindRequired] string user,
+            [FromHeader, BindRequired] string petName,
+            [FromHeader, BindRequired] int petId)
+        {
+            var users = await _myPetService.GetUserPet(user, petName, petId);
             return Ok(users);
         }
     }

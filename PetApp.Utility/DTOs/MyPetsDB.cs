@@ -13,8 +13,18 @@ namespace PetApp.Utility.DTOs
     {
         public string owner {  get; set; }
         public string petName { get; set; }
+        public int petId { get; set; }
+        public PetSex sex { get; set; }
+
         public DateOnly birthDate { get; set; }
-        public PetType petType { get; set; }
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum PetSex
+    {
+        Male,
+        Female,
+        Other
     }
 
     public class myPetDB
@@ -25,9 +35,8 @@ namespace PetApp.Utility.DTOs
         public string owner { get; set; }
         public string petName { get; set; }
         public DateOnly birthDate { get; set; }
-        public string petType { get; set; }
-
-        public string petBreed { get; set; }
+        public int petId { get; set; }
+        public string sex { get; set; }
         
     }
 
@@ -36,7 +45,11 @@ namespace PetApp.Utility.DTOs
         public string petName { get; set; }
         public DateOnly birthDate { get; set; }
         public int age { get; set; }
-        public string petType { get; set; }
+        public int petId { get; set; }
+        public string sex { get; set; }
+        public string petClass { get; set; }
+        public string? petType { get; set; }
+        public string? petBreed { get; set; }
     }
 
 }

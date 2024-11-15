@@ -27,8 +27,8 @@ namespace PetApp.Services.Repository
         public async Task<List<myPetDB>> GetAllPets() =>
             await _myPetCollection.Find(_ => true).ToListAsync();
 
-        public async Task<myPetDB> GetOnePet(string owner, string petName, PetType petType) =>
-            await _myPetCollection.Find(x => x.owner == owner && x.petName == petName && x.petType == petType.ToString()).FirstOrDefaultAsync();
+        public async Task<myPetDB> GetOnePet(string owner, string petName, int petId) =>
+            await _myPetCollection.Find(x => x.owner == owner && x.petName == petName && x.petId == petId).FirstOrDefaultAsync();
 
         public async Task<List<myPetDB>> GetUserPets(string owner) =>
            await _myPetCollection.Find(x => x.owner == owner).ToListAsync();
@@ -36,10 +36,10 @@ namespace PetApp.Services.Repository
         public async Task CreateAsync(myPetDB newPet) =>
             await _myPetCollection.InsertOneAsync(newPet);
 
-        public async Task UpdateAsync(string petName, int age, PetType petType, myPetDB updatedUser) =>
-            await _myPetCollection.ReplaceOneAsync(x => x.petName == petName && x.petType == petType.ToString(), updatedUser);
+        public async Task UpdateAsync(string petName, int age, int petId, myPetDB updatedUser) =>
+            await _myPetCollection.ReplaceOneAsync(x => x.petName == petName && x.petId == petId, updatedUser);
 
-        public async Task RemoveAsync(string petName, int age, PetType petType) =>
-            await _myPetCollection.DeleteOneAsync(x => x.petName == petName && x.petType == petType.ToString());
+        public async Task RemoveAsync(string petName, int age, int petId) =>
+            await _myPetCollection.DeleteOneAsync(x => x.petName == petName && x.petId == petId);
     }
 }

@@ -31,10 +31,20 @@ namespace PetApp.Services.Services.Admin
 
             foreach (var pet in allPets)
             {
+                if(pet.petBreed is null)
+                {
+                    var typeExist = _compareStrings.IsStringEqual(request.petType, pet.petType);
+                    if(typeExist.Item1 is true)
+                    {
+                        return ("Pet " + request.petType + " already exist!");
+                    }
+                    request.petType = typeExist.Item2;
+                }
+
                 var breedExist = _compareStrings.IsStringEqual(request.petBreed, pet.petBreed);
                 if (breedExist.Item1 is true)
                 {
-                    return ("Pet " + request.petBreed + " already exist!"); ;
+                    return ("Pet " + request.petBreed + " already exist!");
                 }
                 request.petBreed = breedExist.Item2;
             }

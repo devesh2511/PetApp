@@ -3,8 +3,10 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using PetApp.Services.Repository;
+using PetApp.Services.Repository.Admin;
 using PetApp.Utility;
 using PetApp.Utility.DTOs;
+using PetApp.Utility.DTOs.Admin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,15 +18,20 @@ namespace PetApp.Services.Services
     public class MyPetService
     {
         private MyPetRepository _myPetRepository;
-        public MyPetService(MyPetRepository myPetRepository)
+        private PetRepository _petRepository;
+        public MyPetService(MyPetRepository myPetRepository, PetRepository petRepository)
         {
             _myPetRepository = myPetRepository;
+            _petRepository=petRepository;
         }
 
         public async Task<dynamic> CreateMyPet(petRequest request)
         {
             var userPets = await _myPetRepository.GetUserPets(request.owner);
-            var petExists = userPets.Find(x=>x.birthDate == request.birthDate && x.petType == request.petType.ToString() && x.petName == request.petName);
+
+            var petExists = userPets.Find(x=>x.birthDate == request.birthDate && 
+            x.petId == request.petId && x.petName == request.petName);
+
             if (petExists != null)
             {
                 return ("Pet " + request.petName + " already exist!"); ;
@@ -35,7 +42,8 @@ namespace PetApp.Services.Services
                 owner = request.owner,
                 petName = request.petName,
                 birthDate = request.birthDate,
-                petType = request.petType.ToString()
+                sex = request.sex.ToString(),
+                petId = request.petId
             };
 
             await _myPetRepository.CreateAsync(newPet);
@@ -74,16 +82,45 @@ namespace PetApp.Services.Services
             {
                 DateOnly now = DateOnly.FromDateTime(DateTime.Now);
                 int age = (now.DayNumber - item.birthDate.DayNumber)/365;
+                var petDetail = await _petRepository.GetOnePet(item.petId);
                 petsList.Add(new myPetResponse
                 {
                     petName=item.petName,
                     age = age,
-                    petType = item.petType,
+                    petId = item.petId,
                     birthDate = item.birthDate,
+                    sex = item.sex.ToString(),
+                    petType = petDetail.petType,
+                    petClass = petDetail.petClass,
+                    petBreed = petDetail.petBreed
                 }
                 );
             }
             return petsList;
         }
+
+        public async Task<myPetResponse> GetUserPet(string owner, string petName, int petId)
+        {
+            var myPet = await _myPetRepository.GetOnePet(owner, petName, petId);
+
+            DateOnly now = DateOnly.FromDateTime(DateTime.Now);
+            int age = (now.DayNumber - myPet.birthDate.DayNumber)/365;
+            var petDetail = await _petRepository.GetOnePet(myPet.petId);
+
+            myPetResponse myPetResponse = new()
+            {
+                petName=myPet.petName,
+                age = age,
+                petId = myPet.petId,
+                birthDate = myPet.birthDate,
+                sex = myPet.sex.ToString(),
+                petType = petDetail.petType,
+                petClass = petDetail.petClass,
+                petBreed = petDetail.petBreed
+            };
+
+            return myPetResponse;
+        }
+
     }
 }

@@ -56,6 +56,7 @@ namespace PetApp.Utility.DTOs.Admin
         Horse,
         Pig,
         Goat,
+        Parrot,
         Other
     }
 
